@@ -1,16 +1,35 @@
 #actions {
-  width: 300px;
+  width: 270px;
   height: 200px;
-}
-
-.id-record {
-  display: none;
+  padding: 0px 24px 0px 0px;
+  border-top: 1.5px solid blanchedalmond;
+  border-bottom: 1.5px solid blanchedalmond;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  border-radius: 5%;
 }
 
 body {
-  width: 350px;
-  height: 200px;
+  width: 320px;
   margin-left: auto;
   margin-right: auto;
-  
+}
+
+.col {
+  margin: 1px 0px 1px 0px;
+}
+
+.action-type {
+  padding: 2px 3px;
+  text-align: center;
+}
+
+.input-group {
+  margin-left: 2px;
+}
+
+.choose-target {
+  height: 30px;
+  width: 130px;
+  overflow: hidden;
 }

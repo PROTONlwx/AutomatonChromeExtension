@@ -50,11 +50,7 @@ class Chain {
 class ActionFactory {
   static objToAction (obj) {
     if (obj.type.valueOf() == "click".valueOf()) {
-      if (obj.clickType.valueOf() == "id".valueOf()) {
-        return new IdClick(obj.id, null, null);
-      } else if (obj.clickType.valueOf() == "match".valueOf()) {
-        return new MatchClick(obj.id, obj.classList, null, null)
-      }
+      return new Click(obj.id, obj.classList, null, null)
     } else if (obj.type.valueOf() == "wait".valueOf()) {
       return new Wait(obj.time, null, null);
     } else if (obj.type.valueOf() == "goto".valueOf()) {
@@ -93,49 +89,17 @@ class Action {
 }
 
 class Click extends Action {
-  constructor(prev, next) {
-    super("click", prev, next);
-  }
-}
-
-class IdClick extends Click {
-  constructor(id, prev, next) {
-    super(prev, next);
-    this.clickType = "id";
-    this.id = id;
-  }
-
-  executeAction() {
-    if (this.id != null) {
-      document.getElementById(this.id).click();
-    } else {
-      throw "click action id = null";
-    }
-    this.moveOn();
-  }
-
-  
-  getObjRepresentation() {
-    let tmp = super.getObjRepresentation();
-    tmp.clickType = this.clickType;
-    tmp.id = this.id;
-    return tmp;
-  }
-}
-
-class MatchClick extends Click {
   constructor(id, classList, prev, next) {
-    super(prev, next);
-    this.clickType = "match";
+    super("click", prev, next);
     this.id = id;
     this.classList = classList;
   }
 
   executeAction() {
-    if (this.id != null) {
+    if (document.getElementById(this.id)) {
       document.getElementById(this.id).click();
-    } else if (this.classList != null) {
-      document.getElementsByClassName(this.classList).click();
+    } else if (this.classList != "") {
+      document.getElementsByClassName(this.classList)[0].click();
     } else {
       throw "click action id and classlist are null";
     }
@@ -144,9 +108,8 @@ class MatchClick extends Click {
 
   getObjRepresentation() {
     let tmp = super.getObjRepresentation();
-    tmp.clickType = this.clickType;
-    tmp.id = this.id;
     tmp.classList = this.classList;
+    tmp.id = this.id;
     return tmp;
   }
 }
@@ -210,7 +173,12 @@ class TextInput extends Action {
 
   executeAction() {
     if (this.id != null) {
-      document.getElementById(this.id).value = this.text;
+      let area = document.getElementById(this.id);
+      if (area.value) {
+        area.value = this.text;
+      } else {
+        area.innerText = this.text;
+      }
     } else {
       throw "input action id is null";
     }

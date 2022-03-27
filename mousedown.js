@@ -15,16 +15,8 @@ function main() {
   chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
     if (message.request.valueOf() == "lastClicked".valueOf()) {
       lastClicked.id = lastClicked.id ? lastClicked.id : uuidv4();
-      sendResponse(lastClicked.id);
-    } else if (message.request.valueOf() == "clickId".valueOf()) {
-      if (lastClicked != null) {
-        console.log(message.id);
-        for (let i = 0; i < 3; i++)
-          document.getElementById(message.id).click();
-        sendResponse("clicked");
-      } else {
-        sendResponse("none-selected");
-      }
+      let cl = lastClicked.getAttribute("class")
+      sendResponse(JSON.stringify({id: lastClicked.id, classList: cl}));
     }
   });
 

@@ -8,19 +8,22 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">How to use</a>
-        </div>
-        <div class="col">
-          <h5>Flow</h5>
-          <h5>Controller</h5>
-        </div>
-        <div class="col">
-          <a class="btn btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Terms of use</a>
+          <a class="btn btn-secondary" data-bs-toggle="collapse" href="#how-to-use" role="button">How to use</a>
+          <a class="btn btn-secondary" data-bs-toggle="collapse" href="#term-of-use" role="button">Terms of use</a>
         </div>
       </div>
       <div class="row">
         <div class="col">
-          <div class="collapse multi-collapse" id="multiCollapseExample1">
+          <div class="collapse multi-collapse" id="how-to-use">
+            <div class="card card-body">
+              <a href="reetaa.com" class="link-primary">中文文档</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="collapse multi-collapse" id="term-of-use">
             <div class="card card-body">
               Some placeholder content for the first collapse component of this multi-collapse example. This panel is hidden by default but revealed when the user activates the relevant trigger.
             </div>
@@ -29,99 +32,27 @@
       </div>
       <div class="row">
         <div class="col">
+          <button id="execute" type="button" class="btn btn-primary">Execute</button>
+          <button id="save" type="button" class="btn btn-success">Save</button>
+          <button id="clear" type="button" class="btn btn-warning">Clear</button>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col">
           <div class="container overflow-auto" id="actions">
-            <!-- <div class="row action">
-              <div class="col-1">
-                <span class="badge bg-secondary">0</span>
-              </div>
-              <div class="col">
-                <p class="action-type">Click</p>
-              </div>
-              <div class="col-8">
-                <button type="button" class="btn btn-outline-primary btn-sm choose-target">Choose target</button>
-              </div>
-              <div class="col-1">
-                <button type="button" class="btn-close" aria-label="Close"></button>
-              </div>
-            </div>
-            <div class="row action">
-              <div class="col-1">
-                <span class="badge bg-secondary">1</span>
-              </div>
-              <div class="col">
-                <p class="action-type">Input</p>
-              </div>
-              <div class="col-6">
-                <button type="button" class="btn btn-outline-primary btn-sm choose-target">Choose target</button>
-                <div class="input-group input-group-sm mb-3">
-                  <span class="input-group-text">Input</span>
-                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-                </div>
-              </div>
-              <div class="col">
-                <button type="button" class="btn-close" aria-label="Close"></button>
-              </div>
-            </div>
-            <div class="row action">
-              <div class="col-1">
-                <span class="badge bg-secondary">1</span>
-              </div>
-              <div class="col">
-                <p class="action-type">Wait</p>
-              </div>
-              <div class="col-6">
-                <div class="input-group input-group-sm mb-3">
-                  <span class="input-group-text">Wait</span>
-                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-                </div>
-              </div>
-              <div class="col">
-                <button type="button" class="btn-close" aria-label="Close"></button>
-              </div>
-            </div>
-            <div class="row action">
-              <div class="col-1">
-                <span class="badge bg-secondary">1</span>
-              </div>
-              <div class="col">
-                <p class="action-type">Goto</p>
-              </div>
-              <div class="col-6">
-                <div class="input-group input-group-sm mb-3">
-                  <span class="input-group-text">Goto</span>
-                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-                </div>
-              </div>
-              <div class="col">
-                <button type="button" class="btn-close" aria-label="Close"></button>
-              </div>
-            </div>
-            <div class="row action">
-              <div class="col-1">
-                <span class="badge bg-secondary">1</span>
-              </div>
-              <div class="col">
-                <p class="action-type">Break</p>
-              </div>
-              <div class="col-6">
-                <div class="input-group input-group-sm mb-3">
-                  <span class="input-group-text">After Passing</span>
-                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-                </div>
-              </div>
-              <div class="col">
-                <button type="button" class="btn-close" aria-label="Close"></button>
-              </div>
-            </div> -->
+           <!-- actions goes here -->
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col"></div>
+        <div class="col">
+          
+        </div>
         <div class="col-6">
           <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-              ADD
+            <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+              ADD ACTION
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
               <li><button class="dropdown-item" type="button" id="add-click">Click</button></li>
@@ -133,19 +64,8 @@
           </div>
         </div>
         <div class="col"></div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <button id="execute" type="button" class="btn btn-primary">Execute</button>
-        </div>
-        <div class="col-4"></div>
-        <div class="col">
-          <button id="save" type="button" class="btn btn-primary">Save</button>
-        </div>
-      </div>
-      
+      </div>      
     </div>
-  
     <script src="bootstrap.bundle.min.js"></script>
     <script src="popup.js"></script>
   </body>

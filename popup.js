@@ -12,78 +12,31 @@ id("add-goto").addEventListener("click", addGoto);
 id("add-break").addEventListener("click", addBreak);
 id("execute").addEventListener("click", execute);
 id("save").addEventListener("click", save);
+id("clear").addEventListener("click", clear);
 
 // Handlers
 function addClick() {
-  let row = document.createElement("div");
-  row.classList.add("row", "action");
-
-  let col1 = document.createElement("div");
-  col1.classList.add("col-1");
-  let col2 = document.createElement("div");
-  col2.classList.add("col-2");
-  let col3 = document.createElement("div");
-  col3.classList.add("col");
-  let col4 = document.createElement("div");
-  col4.classList.add("col-1");
-
-  let stepNo = document.createElement("span");
-  stepNo.classList.add("badge", "bg-secondary", "step-no");
-  stepNo.textContent = id("actions").childElementCount;
-  let type = document.createElement("p");
-  type.classList.add("action-type");
-  type.textContent = "Click";
+  let [row, col3] = templateAction("Click");
   let choose = document.createElement("button");
   choose.type = "button";
   choose.classList.add("btn", "btn-outline-primary", "btn-sm", "choose-target");
   choose.textContent = "Choose target";
-  let del = document.createElement("button");
-  del.type = "button";
-  del.classList.add("btn-close");
 
-  col1.appendChild(stepNo);
-  col2.appendChild(type);
   col3.appendChild(choose);
-  col4.appendChild(del);
-  row.appendChild(col1);
-  row.appendChild(col2);
-  row.appendChild(col3);
-  row.appendChild(col4);
-  id("actions").appendChild(row);
 
+  id("actions").appendChild(row);
   choose.addEventListener("click", addMenuItem);
-  del.addEventListener("click", deleteAction);
 }
 
 function addInput() {
-  let row = document.createElement("div");
-  row.classList.add("row", "action");
-
-  let col1 = document.createElement("div");
-  col1.classList.add("col-1");
-  let col2 = document.createElement("div");
-  col2.classList.add("col-2");
-  let col3 = document.createElement("div");
-  col3.classList.add("col");
-  let col4 = document.createElement("div");
-  col4.classList.add("col-1");
-
-  let stepNo = document.createElement("span");
-  stepNo.classList.add("badge", "bg-secondary", "step-no");
-  stepNo.textContent = id("actions").childElementCount;
-  let type = document.createElement("p");
-  type.classList.add("action-type");
-  type.textContent = "Input";
+  let [row, col3] = templateAction("Input");
   let choose = document.createElement("button");
   choose.type = "button";
   choose.classList.add("btn", "btn-outline-primary", "btn-sm", "choose-target");
   choose.textContent = "Choose target";
   let inputSection = document.createElement("div");
   inputSection.classList.add("input-group", "input-group-sm", "mb-3");
-  let del = document.createElement("button");
-  del.type = "button";
-  del.classList.add("btn-close");
-
+  
   let inputTitle = document.createElement("span");
   inputTitle.classList.add("input-group-text");
   inputTitle.textContent = "Input";
@@ -93,45 +46,17 @@ function addInput() {
 
   inputSection.appendChild(inputTitle);
   inputSection.appendChild(inputArea);
-  col1.appendChild(stepNo);
-  col2.appendChild(type);
   col3.appendChild(choose);
   col3.appendChild(inputSection);
-  col4.appendChild(del);
-  row.appendChild(col1);
-  row.appendChild(col2);
-  row.appendChild(col3);
-  row.appendChild(col4);
-  id("actions").appendChild(row);
 
+  id("actions").appendChild(row);
   choose.addEventListener("click", addMenuItem);
-  del.addEventListener("click", deleteAction);
 }
 
 function addWait() {
-  let row = document.createElement("div");
-  row.classList.add("row", "action");
-
-  let col1 = document.createElement("div");
-  col1.classList.add("col-1");
-  let col2 = document.createElement("div");
-  col2.classList.add("col-2");
-  let col3 = document.createElement("div");
-  col3.classList.add("col");
-  let col4 = document.createElement("div");
-  col4.classList.add("col-1");
-
-  let stepNo = document.createElement("span");
-  stepNo.classList.add("badge", "bg-secondary", "step-no");
-  stepNo.textContent = id("actions").childElementCount;
-  let type = document.createElement("p");
-  type.classList.add("action-type");
-  type.textContent = "Wait";
+  let [row, col3] = templateAction("Wait");
   let inputSection = document.createElement("div");
   inputSection.classList.add("input-group", "input-group-sm", "mb-3");
-  let del = document.createElement("button");
-  del.type = "button";
-  del.classList.add("btn-close");
 
   let inputTitle = document.createElement("span");
   inputTitle.classList.add("input-group-text");
@@ -139,47 +64,23 @@ function addWait() {
   let inputArea = document.createElement("input");
   inputArea.type = "text";
   inputArea.classList.add("form-control");
+  let inputTail = document.createElement("span");
+  inputTail.classList.add("input-group-text");
+  inputTail.textContent = "Second";
 
   inputSection.appendChild(inputTitle);
   inputSection.appendChild(inputArea);
-  col1.appendChild(stepNo);
-  col2.appendChild(type);
-  col3.appendChild(inputSection);
-  col4.appendChild(del);
-  row.appendChild(col1);
-  row.appendChild(col2);
-  row.appendChild(col3);
-  row.appendChild(col4);
-  id("actions").appendChild(row);
-  del.addEventListener("click", deleteAction);
+  inputSection.appendChild(inputTail);
 
+  col3.appendChild(inputSection);
+  id("actions").appendChild(row);
 }
 
 
 function addGoto() {
-  let row = document.createElement("div");
-  row.classList.add("row", "action");
-
-  let col1 = document.createElement("div");
-  col1.classList.add("col-1");
-  let col2 = document.createElement("div");
-  col2.classList.add("col-2");
-  let col3 = document.createElement("div");
-  col3.classList.add("col");
-  let col4 = document.createElement("div");
-  col4.classList.add("col-1");
-
-  let stepNo = document.createElement("span");
-  stepNo.classList.add("badge", "bg-secondary", "step-no");
-  stepNo.textContent = id("actions").childElementCount;
-  let type = document.createElement("p");
-  type.classList.add("action-type");
-  type.textContent = "Goto";
+  let [row, col3] = templateAction("Goto");
   let inputSection = document.createElement("div");
   inputSection.classList.add("input-group", "input-group-sm", "mb-3");
-  let del = document.createElement("button");
-  del.type = "button";
-  del.classList.add("btn-close");
 
   let inputTitle = document.createElement("span");
   inputTitle.classList.add("input-group-text");
@@ -190,64 +91,31 @@ function addGoto() {
 
   inputSection.appendChild(inputTitle);
   inputSection.appendChild(inputArea);
-  col1.appendChild(stepNo);
-  col2.appendChild(type);
   col3.appendChild(inputSection);
-  col4.appendChild(del);
-  row.appendChild(col1);
-  row.appendChild(col2);
-  row.appendChild(col3);
-  row.appendChild(col4);
   id("actions").appendChild(row);
-  del.addEventListener("click", deleteAction);
-
 }
 
 function addBreak() {
-  let row = document.createElement("div");
-  row.classList.add("row", "action");
-
-  let col1 = document.createElement("div");
-  col1.classList.add("col-1");
-  let col2 = document.createElement("div");
-  col2.classList.add("col-2");
-  let col3 = document.createElement("div");
-  col3.classList.add("col");
-  let col4 = document.createElement("div");
-  col4.classList.add("col-1");
-
-  let stepNo = document.createElement("span");
-  stepNo.classList.add("badge", "bg-secondary", "step-no");
-  stepNo.textContent = id("actions").childElementCount;
-  let type = document.createElement("p");
-  type.classList.add("action-type");
-  type.textContent = "Break";
+  let [row, col3] = templateAction("Break");
   let inputSection = document.createElement("div");
   inputSection.classList.add("input-group", "input-group-sm", "mb-3");
-  let del = document.createElement("button");
-  del.type = "button";
-  del.classList.add("btn-close");
 
   let inputTitle = document.createElement("span");
   inputTitle.classList.add("input-group-text");
-  inputTitle.textContent = "After Passing";
+  inputTitle.textContent = "After";
   let inputArea = document.createElement("input");
   inputArea.type = "text";
   inputArea.classList.add("form-control");
+  let inputTail = document.createElement("span");
+  inputTail.classList.add("input-group-text");
+  inputTail.textContent = "Pass";
 
   inputSection.appendChild(inputTitle);
   inputSection.appendChild(inputArea);
-  col1.appendChild(stepNo);
-  col2.appendChild(type);
-  col3.appendChild(inputSection);
-  col4.appendChild(del);
-  row.appendChild(col1);
-  row.appendChild(col2);
-  row.appendChild(col3);
-  row.appendChild(col4);
-  id("actions").appendChild(row);
-  del.addEventListener("click", deleteAction);
+  inputSection.appendChild(inputTail);
 
+  col3.appendChild(inputSection);
+  id("actions").appendChild(row);
 }
 
 async function execute() {
@@ -260,7 +128,7 @@ async function execute() {
 }
 
 async function save() {
-  console.log("save not implemented");
+  alert("Comming soon");
 }
 
 function addMenuItem(evt) {
@@ -280,23 +148,17 @@ function deleteAction(evt) {
   reorder();
 }
 
+function clear() {
+  let parent = id("actions");
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  }
+}
+
 /******** UI END *******/
 
 
 /******** HELPER *******/
-
-function id(i){
-  return document.getElementById(i);
-}
-
-function qsa(i){
-  return document.querySelectorAll(i);
-}
-
-function qs(i){
-  return document.querySelector(i);
-}
-
 function addbutton(info, tab) {
   chrome.tabs.sendMessage(tab.id, {request: "lastClicked"}, function(response) {
     buttons.forEach(btn => btn.textContent = response);
@@ -310,8 +172,8 @@ function addbutton(info, tab) {
 function populate(action) {
   let type = action.querySelector("p.action-type").textContent.toLowerCase();
   if (type == "click") {
-    let id = action.querySelector(".choose-target").textContent;
-    actions.push({type: type, clickType: "id", id: id});
+    let id = JSON.parse(action.querySelector(".choose-target").textContent);
+    actions.push({type: type, id: id.id, classList: id.classList});
   } else if (type == "wait") {
     let time = parseInt(action.querySelector("input").value);
     time = isNaN(time) ? 0 : time * 1000;
@@ -325,9 +187,9 @@ function populate(action) {
     pass = isNaN(pass) ? 1 : pass;
     actions.push({type: type, pass: pass});
   } else if (type == "input") {
-    let id = action.querySelector(".choose-target").textContent;
+    let id = JSON.parse(action.querySelector(".choose-target").textContent)
     let text = action.querySelector("input").value;
-    actions.push({type: type, text: text, id: id});
+    actions.push({type: type, text: text, id: id.id});
   } else {
     throw "action type not recognized: " + type;
   }
@@ -339,4 +201,54 @@ function reorder() {
     allAction[i].querySelector(".step-no").textContent = i;
   }
 }
+
+function templateAction(typeName) {
+  let row = document.createElement("div");
+  row.classList.add("row", "action");
+
+  let col1 = document.createElement("div");
+  col1.classList.add("col-1");
+  let col2 = document.createElement("div");
+  col2.classList.add("col-2");
+  let col3 = document.createElement("div");
+  col3.classList.add("col");
+  let col4 = document.createElement("div");
+  col4.classList.add("col-1");
+
+  let stepNo = document.createElement("span");
+  stepNo.classList.add("badge", "bg-secondary", "step-no");
+  stepNo.textContent = id("actions").childElementCount;
+  let type = document.createElement("p");
+  type.classList.add("action-type");
+  type.textContent = typeName;
+  let del = document.createElement("button");
+  del.type = "button";
+  del.classList.add("btn-close");
+
+  col1.appendChild(stepNo);
+  col2.appendChild(type);
+  col4.appendChild(del);
+  row.appendChild(col1);
+  row.appendChild(col2);
+  row.appendChild(col3);
+  row.appendChild(col4);
+
+  del.addEventListener("click", deleteAction);
+
+  return [row, col3];
+}
+
+
+function id(i){
+  return document.getElementById(i);
+}
+
+function qsa(i){
+  return document.querySelectorAll(i);
+}
+
+function qs(i){
+  return document.querySelector(i);
+}
+
 /******** HELPER END *******/
