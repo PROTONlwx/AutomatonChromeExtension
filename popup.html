@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <link href="bootstrap.min.css" rel="stylesheet">
     <link href="popup.css" rel="stylesheet">
+    <meta charset="UTF-8">
   </head>
   <body>
     <div class="container">
@@ -10,13 +11,62 @@
         <div class="col">
           <a class="btn btn-secondary" data-bs-toggle="collapse" href="#how-to-use" role="button">How to use</a>
           <a class="btn btn-secondary" data-bs-toggle="collapse" href="#term-of-use" role="button">Terms of use</a>
+          <button id="chinese" type="button" class="btn btn-primary btn-sm">中</button>
         </div>
       </div>
       <div class="row">
         <div class="col">
           <div class="collapse multi-collapse" id="how-to-use">
             <div class="card card-body">
-              <a href="reetaa.com" class="link-primary">中文文档</a>
+              <h4>Documentation</h4>
+              <p>
+                Automaton can click/input on your page and wait-for/repeat those tasks. Use this page to tell the Automaton what to do, and the automaton will do them step by step.
+              </p>
+              <ul>
+                <h1>Four buttons:</h1>
+                <li><strong>Execute:</strong> Start running the Automaton.</li>
+                <li><strong>(comming soom)Save:</strong> Save the current Automaton.</li>
+                <li><strong>Clear:</strong> Remove all actions from Automaton.</li>
+                <li><strong>Add Action:</strong> Append a new specified action.</li>
+              </ul>
+              <ul>
+                <h4>Five actions:</h4>
+                <li>
+                  <strong>Click:</strong> An action that click on the page. 
+                  <ol>
+                    <li>Click button <i>Choose Target</i></li>
+                    <li>Right click target button on page</li>
+                    <li>Click <i>Add to action</i> menu item</li>
+                  </ol>
+                </li>
+                <li>
+                  <strong>Input:</strong> An action fills input area on the page.
+                  <ol>
+                    <li>Click button <i>Choose Target</i></li>
+                    <li>Right click target button on page</li>
+                    <li>Click <i>Add to action</i> menu item</li>
+                    <li>Type content in <i>Input</i></li>
+                  </ol>
+                </li>
+                <li>
+                  <strong>Wait:</strong> Wait a while before moving on. 
+                  <ol>
+                    <li>Enter the number of seconds to wait.</li>
+                  </ol>
+                </li>
+                <li>
+                  <strong>Goto:</strong> Continue to some step. 
+                  <ol>
+                    <li>Enter which step to continue executing.</li>
+                  </ol>
+                </li>
+                <li>
+                  <strong>Break:</strong> Stop after passing here X times. 
+                  <ol>
+                    <li>Enter how many time allowed to execute through this action.</li>
+                  </ol>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -25,7 +75,13 @@
         <div class="col">
           <div class="collapse multi-collapse" id="term-of-use">
             <div class="card card-body">
-              Some placeholder content for the first collapse component of this multi-collapse example. This panel is hidden by default but revealed when the user activates the relevant trigger.
+              <ul>
+                <li>Do not use this Automaton illegally.</li>
+                <li>This Automaton does not always work on all input/click tasks because programmatical click/input is always different from real mouse-click/key-strok.</li>
+                <li>Do not use this Automaton on any serious circumstances inluding but not limited to payment, application, insertion/deletion of key information.</li>
+                <li>The author of this Automaton is not reponsible for any damage/loss that are caused by the usage of this Automaton.</li>
+                <li>This Automaton will take up some power of your computer, so running this automaton heavily may slow down your application.</li>
+              </ul>
             </div>
           </div>
         </div>

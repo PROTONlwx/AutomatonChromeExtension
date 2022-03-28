@@ -13,6 +13,7 @@ id("add-break").addEventListener("click", addBreak);
 id("execute").addEventListener("click", execute);
 id("save").addEventListener("click", save);
 id("clear").addEventListener("click", clear);
+id("chinese").addEventListener("click", () => window.open("https://reetaa.com/#/singlePost/68"));
 
 // Handlers
 function addClick() {

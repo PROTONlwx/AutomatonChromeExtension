@@ -1,6 +1,6 @@
 {
-  "name": "Create Click/Input automaton",
-  "description": "Build an Extension!",
+  "name": "Create Click/Input Automaton",
+  "description": "Allow user to create events like click button, input text, wait a while, or repeat steps. Events Series can complete repetitive tasks accurately.",
   "version": "1.0",
   "manifest_version": 3,
   "background": {
