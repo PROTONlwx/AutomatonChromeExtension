@@ -20,8 +20,12 @@ class Chain {
     }
   }
 
-  executeChain() {
-    this.actionChain.executeAction();
+  async executeChain() {
+    let currAction = this.actionChain;
+    while (currAction != null) {
+      await currAction.executeAction();
+      currAction = currAction.next;
+    }
   }
 
   getObjRepresentation() {
@@ -73,14 +77,7 @@ class Action {
   }
 
   executeAction() {
-    console.log("executeAction not implemented: " + this.type);
-    this.moveOn();
-  }
-
-  moveOn() {
-    if (this.next) {
-      this.next.executeAction();
-    }
+    console.log("executeAction not implemented for type: " + this.type);
   }
 
   getObjRepresentation() {
@@ -103,7 +100,6 @@ class Click extends Action {
     } else {
       throw "click action id and classlist are null";
     }
-    this.moveOn();
   }
 
   getObjRepresentation() {
@@ -122,7 +118,6 @@ class Wait extends Action {
 
   async executeAction() {
     await new Promise(r => setTimeout(r, this.time));
-    this.moveOn();
   }
 
   getObjRepresentation() {
@@ -153,8 +148,9 @@ class Break extends Action {
   }
 
   executeAction() {
-    if (this.remaining-- > 0)
-      this.moveOn();
+    if (this.remaining-- == 0) {
+      this.next = null;
+    }
   }
 
   getObjRepresentation() {
@@ -182,7 +178,6 @@ class TextInput extends Action {
     } else {
       throw "input action id is null";
     }
-    this.moveOn();
   }
 
   getObjRepresentation() {
