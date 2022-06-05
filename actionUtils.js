@@ -164,6 +164,7 @@ class TextInput extends Action {
   constructor(id, text, prev, next) {
     super("input", prev, next);
     this.id = id;
+    this.classList = classList;
     this.text = text;
   }
 
@@ -183,6 +184,7 @@ class TextInput extends Action {
   getObjRepresentation() {
     let tmp = super.getObjRepresentation();
     tmp.text = this.text;
+    tmp.classList = this.classList;
     tmp.id = this.id;
     return tmp;
   }

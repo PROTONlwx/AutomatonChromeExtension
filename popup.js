@@ -15,13 +15,16 @@ id("save").addEventListener("click", save);
 id("clear").addEventListener("click", clear);
 id("chinese").addEventListener("click", () => window.open("https://reetaa.com/#/singlePost/68"));
 
+// Load storage
+loadStorage();
+
 // Handlers
-function addClick() {
+function addClick(obj=null) {
   let [row, col3] = templateAction("Click");
   let choose = document.createElement("button");
   choose.type = "button";
   choose.classList.add("btn", "btn-outline-primary", "btn-sm", "choose-target");
-  choose.textContent = "Choose target";
+  choose.textContent = obj ? JSON.stringify({id: obj.id, classList: obj.classList}) : "Choose target";
 
   col3.appendChild(choose);
 
@@ -29,12 +32,12 @@ function addClick() {
   choose.addEventListener("click", addMenuItem);
 }
 
-function addInput() {
+function addInput(obj=null) {
   let [row, col3] = templateAction("Input");
   let choose = document.createElement("button");
   choose.type = "button";
   choose.classList.add("btn", "btn-outline-primary", "btn-sm", "choose-target");
-  choose.textContent = "Choose target";
+  choose.textContent = obj ? JSON.stringify({id: obj.id, classList: obj.classList}) : "Choose target";
   let inputSection = document.createElement("div");
   inputSection.classList.add("input-group", "input-group-sm", "mb-3");
   
@@ -44,6 +47,7 @@ function addInput() {
   let inputArea = document.createElement("input");
   inputArea.type = "text";
   inputArea.classList.add("form-control");
+  inputArea.value = obj ? obj.text : "Your input";
 
   inputSection.appendChild(inputTitle);
   inputSection.appendChild(inputArea);
@@ -54,7 +58,7 @@ function addInput() {
   choose.addEventListener("click", addMenuItem);
 }
 
-function addWait() {
+function addWait(obj=null) {
   let [row, col3] = templateAction("Wait");
   let inputSection = document.createElement("div");
   inputSection.classList.add("input-group", "input-group-sm", "mb-3");
@@ -65,6 +69,7 @@ function addWait() {
   let inputArea = document.createElement("input");
   inputArea.type = "text";
   inputArea.classList.add("form-control");
+  inputArea.value = obj ? obj.time : "";
   let inputTail = document.createElement("span");
   inputTail.classList.add("input-group-text");
   inputTail.textContent = "Second";
@@ -78,7 +83,7 @@ function addWait() {
 }
 
 
-function addGoto() {
+function addGoto(obj=null) {
   let [row, col3] = templateAction("Goto");
   let inputSection = document.createElement("div");
   inputSection.classList.add("input-group", "input-group-sm", "mb-3");
@@ -88,7 +93,8 @@ function addGoto() {
   inputTitle.textContent = "Goto Step";
   let inputArea = document.createElement("input");
   inputArea.type = "text";
-  inputArea.classList.add("form-control");
+  inputArea.classList.add("form-control");  
+  inputArea.value = obj ? obj.gotoStep : "";
 
   inputSection.appendChild(inputTitle);
   inputSection.appendChild(inputArea);
@@ -96,7 +102,7 @@ function addGoto() {
   id("actions").appendChild(row);
 }
 
-function addBreak() {
+function addBreak(obj=null) {
   let [row, col3] = templateAction("Break");
   let inputSection = document.createElement("div");
   inputSection.classList.add("input-group", "input-group-sm", "mb-3");
@@ -107,6 +113,7 @@ function addBreak() {
   let inputArea = document.createElement("input");
   inputArea.type = "text";
   inputArea.classList.add("form-control");
+  inputArea.value = obj ? obj.pass : "";
   let inputTail = document.createElement("span");
   inputTail.classList.add("input-group-text");
   inputTail.textContent = "Pass";
@@ -161,7 +168,8 @@ function clear() {
 
 function loadStorage() {
   chrome.storage.sync.get("click-input-automaton-actions", function(result) {
-    console.log('Value currently is ' + result);
+    actArr = result["click-input-automaton-actions"];
+
   });
 }
 
