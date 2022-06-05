@@ -62,7 +62,7 @@ class ActionFactory {
     } else if (obj.type.valueOf() == "break".valueOf()) {
       return new Break(obj.pass, null, null);
     } else if (obj.type.valueOf() == "input".valueOf()) {
-      return new TextInput(obj.id, obj.text, null, null);
+      return new TextInput(obj.id, obj.classList, obj.text, null, null);
     } else {
       throw "action type not recognized";
     }
@@ -161,17 +161,25 @@ class Break extends Action {
 }
 
 class TextInput extends Action {
-  constructor(id, text, prev, next) {
+  constructor(id,classList, text, prev, next) {
     super("input", prev, next);
     this.id = id;
     this.classList = classList;
     this.text = text;
   }
 
+
   executeAction() {
     if (this.id != null) {
-      let area = document.getElementById(this.id);
-      if (area.value) {
+      let area;
+      if (document.getElementById(this.id)) {
+        area = document.getElementById(this.id);
+      } else if (this.classList != "") {
+        area = document.getElementsByClassName(this.classList)[0];
+      } else {
+        throw "click action id and classlist are null";
+      }
+      if (area.value != undefined) {
         area.value = this.text;
       } else {
         area.innerText = this.text;

@@ -5,11 +5,11 @@ let buttons = [];
 
 // Listeners
 chrome.contextMenus.onClicked.addListener(addbutton);
-id("add-click").addEventListener("click", addClick);
-id("add-input").addEventListener("click", addInput);
-id("add-wait").addEventListener("click", addWait);
-id("add-goto").addEventListener("click", addGoto);
-id("add-break").addEventListener("click", addBreak);
+id("add-click").addEventListener("click", () => addClick());
+id("add-input").addEventListener("click", () => addInput());
+id("add-wait").addEventListener("click", () => addWait());
+id("add-goto").addEventListener("click", () => addGoto());
+id("add-break").addEventListener("click", () => addBreak());
 id("execute").addEventListener("click", execute);
 id("save").addEventListener("click", save);
 id("clear").addEventListener("click", clear);
@@ -69,7 +69,7 @@ function addWait(obj=null) {
   let inputArea = document.createElement("input");
   inputArea.type = "text";
   inputArea.classList.add("form-control");
-  inputArea.value = obj ? obj.time : "";
+  inputArea.value = obj ? obj.time / 1000 : "";
   let inputTail = document.createElement("span");
   inputTail.classList.add("input-group-text");
   inputTail.textContent = "Second";
@@ -168,8 +168,22 @@ function clear() {
 
 function loadStorage() {
   chrome.storage.sync.get("click-input-automaton-actions", function(result) {
-    actArr = result["click-input-automaton-actions"];
-
+    let actArr = result["click-input-automaton-actions"];
+    actArr.forEach(act => {
+      if (act.type == "click") {
+        addClick(act);
+      } else if (act.type == "wait") {
+        addWait(act);
+      } else if (act.type == "goto") {
+        addGoto(act);
+      } else if (act.type == "break") {
+        addBreak(act);
+      } else if (act.type == "input") {
+        addInput(act);
+      } else {
+        throw "action type not recognized: " + type;
+      }
+    });
   });
 }
 
@@ -215,7 +229,7 @@ function populate(action) {
       id = JSON.parse(action.querySelector(".choose-target").textContent);
     }
     let text = action.querySelector("input").value;
-    actions.push({type: type, text: text, id: id.id});
+    actions.push({type: type, text: text, id: id.id, classList: id.classList});
   } else {
     throw "action type not recognized: " + type;
   }
