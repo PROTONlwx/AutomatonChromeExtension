@@ -19,6 +19,10 @@ id("chinese").addEventListener("click", () => window.open("https://reetaa.com/#/
 loadStorage();
 
 // Handlers
+
+/**
+ * Add a click action to page.
+ */
 function addClick(obj=null) {
   let [row, col3] = templateAction("Click");
   let choose = document.createElement("button");
@@ -32,6 +36,9 @@ function addClick(obj=null) {
   choose.addEventListener("click", addMenuItem);
 }
 
+/**
+ * Add a input action to page.
+ */
 function addInput(obj=null) {
   let [row, col3] = templateAction("Input");
   let choose = document.createElement("button");
@@ -58,6 +65,9 @@ function addInput(obj=null) {
   choose.addEventListener("click", addMenuItem);
 }
 
+/**
+ * Add a wait action to page.
+ */
 function addWait(obj=null) {
   let [row, col3] = templateAction("Wait");
   let inputSection = document.createElement("div");
@@ -82,7 +92,9 @@ function addWait(obj=null) {
   id("actions").appendChild(row);
 }
 
-
+/**
+ * Add a goto action to page.
+ */
 function addGoto(obj=null) {
   let [row, col3] = templateAction("Goto");
   let inputSection = document.createElement("div");
@@ -102,6 +114,9 @@ function addGoto(obj=null) {
   id("actions").appendChild(row);
 }
 
+/**
+ * Add a break action to page.
+ */
 function addBreak(obj=null) {
   let [row, col3] = templateAction("Break");
   let inputSection = document.createElement("div");
@@ -126,6 +141,9 @@ function addBreak(obj=null) {
   id("actions").appendChild(row);
 }
 
+/**
+ * Send the actions to content script to execute.
+ */
 async function execute() {
   actions = [];
   document.querySelectorAll(".action").forEach(populate);
@@ -135,12 +153,18 @@ async function execute() {
   });
 }
 
+/**
+ * Save all actions on page to storage.
+ */
 async function save() {
   actions = [];
   document.querySelectorAll(".action").forEach(populate);
   chrome.storage.sync.set({"click-input-automaton-actions": actions}, function() {});
 }
 
+/**
+ * Choose element from page.
+ */
 function addMenuItem(evt) {
   chrome.contextMenus.update("clicker-select", {
     visible: true
@@ -149,6 +173,9 @@ function addMenuItem(evt) {
   buttons.push(evt.target);
 }
 
+/**
+ * Delete action from page.
+ */
 function deleteAction(evt) {
   let action = evt.target;
   while (!action.classList.contains("action")) {
@@ -158,6 +185,9 @@ function deleteAction(evt) {
   reorder();
 }
 
+/**
+ * Delete all action from page.
+ */
 function clear() {
   let parent = id("actions");
   while (parent.firstChild) {
@@ -165,6 +195,9 @@ function clear() {
   }
 }
 
+/**
+ * Load stored actions.
+ */
 function loadStorage() {
   chrome.storage.sync.get("click-input-automaton-actions", function(result) {
     let actArr = result["click-input-automaton-actions"];
