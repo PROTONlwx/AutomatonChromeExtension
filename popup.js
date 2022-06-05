@@ -130,6 +130,9 @@ async function execute() {
 
 async function save() {
   alert("Comming soon");
+  actions = [];
+  document.querySelectorAll(".action").forEach(populate);
+  chrome.storage.sync.set({"click-input-automaton-actions": actions}, function() {});
 }
 
 function addMenuItem(evt) {
@@ -156,6 +159,12 @@ function clear() {
   }
 }
 
+function loadStorage() {
+  chrome.storage.sync.get("click-input-automaton-actions", function(result) {
+    console.log('Value currently is ' + result);
+  });
+}
+
 /******** UI END *******/
 
 
@@ -173,7 +182,11 @@ function addbutton(info, tab) {
 function populate(action) {
   let type = action.querySelector("p.action-type").textContent.toLowerCase();
   if (type == "click") {
-    let id = JSON.parse(action.querySelector(".choose-target").textContent);
+    let tmp = action.querySelector(".choose-target").textContent;
+    let id = {};
+    if (tmp !== "Choose target") {
+      id = JSON.parse(action.querySelector(".choose-target").textContent);
+    }
     actions.push({type: type, id: id.id, classList: id.classList});
   } else if (type == "wait") {
     let time = parseInt(action.querySelector("input").value);
@@ -188,7 +201,11 @@ function populate(action) {
     pass = isNaN(pass) ? 1 : pass;
     actions.push({type: type, pass: pass});
   } else if (type == "input") {
-    let id = JSON.parse(action.querySelector(".choose-target").textContent)
+    let tmp = action.querySelector(".choose-target").textContent;
+    let id = {};
+    if (tmp !== "Choose target") {
+      id = JSON.parse(action.querySelector(".choose-target").textContent);
+    }
     let text = action.querySelector("input").value;
     actions.push({type: type, text: text, id: id.id});
   } else {

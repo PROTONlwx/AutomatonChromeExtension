@@ -12,7 +12,7 @@
       "js": ["mousedown.js", "actionUtils.js", "action.js"]
     }
   ],
-  "permissions": ["activeTab", "contextMenus"],
+  "permissions": ["activeTab", "contextMenus", "storage"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
