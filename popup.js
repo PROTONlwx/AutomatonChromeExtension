@@ -136,7 +136,6 @@ async function execute() {
 }
 
 async function save() {
-  alert("Comming soon");
   actions = [];
   document.querySelectorAll(".action").forEach(populate);
   chrome.storage.sync.set({"click-input-automaton-actions": actions}, function() {});
