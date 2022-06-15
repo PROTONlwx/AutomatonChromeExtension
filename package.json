@@ -1,0 +1,23 @@
+{
+  "name": "automatonchromeextension",
+  "version": "1.0.0",
+  "description": "Chrome extension that allow user to create an automaton that input/click on the page.",
+  "main": "actionUtils.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PROTONlwx/AutomatonChromeExtension.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PROTONlwx/AutomatonChromeExtension/issues"
+  },
+  "homepage": "https://github.com/PROTONlwx/AutomatonChromeExtension#readme",
+  "devDependencies": {
+    "@types/chrome": "^0.0.190",
+    "@types/uuid": "^8.3.4"
+  }
+}

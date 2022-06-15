@@ -1,27 +1,39 @@
+type ActionObj = {
+  type: string
+};
+type ClickObj = ActionObj & { id: string, classList: string }
+type WaitObj = ActionObj & { time: number }
+type GotoObj = ActionObj & { gotoStep: number }
+type BreakObj = ActionObj & { pass: number }
+type TextInputObj = ActionObj & { id: string, classList: string, text: string }
+type ActionSet = ClickObj | TextInputObj | WaitObj | GotoObj | BreakObj
+
+
 /**
  * Chain represents a chain of actions.
  * This implementation uses linked-list-like structure.
  */
 class Chain {
+  actionChain: Action;
   /**
    * Create the chain from actions.
    *
    * @param {actions} The array of actions that defines the chain.
    * @throws "goto invalid steps" if goto action goes to action after it.
    */
-  constructor(actions) {
+  constructor(actions: Array<ActionSet>) {
     this.actionChain = new Action("none", null, null);
     let prev = this.actionChain;
     for (let i = 0; i < actions.length; i++) {
-      let curr = ActionFactory.objToAction(actions[i]);
+      let curr: Action = ActionFactory.objToAction(actions[i]);
       if (curr.type.valueOf() == "goto".valueOf()) {
-        if (curr.gotoStep < 0 || curr.gotoStep >= i) {
+        if ((curr as Goto).gotoStep < 0 || (curr as Goto).gotoStep >= i) {
           throw "goto invalid steps";
         }
         
         prev.next = curr;
         curr.prev = prev;
-        curr.next = this.getIthAction(curr.gotoStep);
+        curr.next = this.getIthAction((curr as Goto).gotoStep);
         break;
       }
       prev.next = curr;
@@ -34,7 +46,7 @@ class Chain {
    * Execute the chain.
    */
   async executeChain() {
-    let currAction = this.actionChain;
+    let currAction: Action | null = this.actionChain;
     while (currAction != null) {
       await currAction.executeAction();
       currAction = currAction.next;
@@ -58,7 +70,7 @@ class Chain {
    * Reture the i th action of this chain.
    * @return i th action. If i < 0 or i > chain length, return null.
    */
-  getIthAction(target) {
+  getIthAction(target: number) {
     let curr = this.actionChain.next;
     let i = 0;
     while(curr != null) {
@@ -82,16 +94,16 @@ class ActionFactory {
    * @param {obj} The object string representation of an action.
    * @return Action object defined by the string.
    */
-  static objToAction (obj) {
-    if (obj.type.valueOf() == "click".valueOf()) {
+  static objToAction (obj: ActionSet) {
+    if ("id" in obj && "classList" in obj && !("text" in obj)) {
       return new Click(obj.id, obj.classList, null, null)
-    } else if (obj.type.valueOf() == "wait".valueOf()) {
+    } else if ("time" in obj) {
       return new Wait(obj.time, null, null);
-    } else if (obj.type.valueOf() == "goto".valueOf()) {
+    } else if ("gotoStep" in obj) {
       return new Goto(obj.gotoStep, null, null);
-    } else if (obj.type.valueOf() == "break".valueOf()) {
+    } else if ("pass" in obj) {
       return new Break(obj.pass, null, null);
-    } else if (obj.type.valueOf() == "input".valueOf()) {
+    } else if ("id" in obj && "classList" in obj && "text" in obj) {
       return new TextInput(obj.id, obj.classList, obj.text, null, null);
     } else {
       throw "action type not recognized";
@@ -103,6 +115,10 @@ class ActionFactory {
  * Individual Action object in the Chain.
  */
 class Action {
+  type: string;
+  prev: Action | null;
+  next: Action | null;
+
   /**
    * Create the action from object string.
    *
@@ -110,7 +126,7 @@ class Action {
    * @param {prev} Reference to previous action in the chain.
    * @param {next} Reference to next action in the chain.
    */
-  constructor(type, prev, next) {
+  constructor(type: string, prev: Action | null, next: Action | null) {
     this.type = type;
     this.prev = prev;
     this.next = next;
@@ -136,13 +152,15 @@ class Action {
  * Click, click something on page.
  */
 class Click extends Action {
+  id: string
+  classList: string
   /**
    * @param {id} id of element clicked
    * @param {classList} classList of element clicked
    * @param {prev} Reference to previous action in the chain.
    * @param {next} Reference to next action in the chain.
    */
-  constructor(id, classList, prev, next) {
+  constructor(id: string, classList: string, prev: Action | null, next: Action | null) {
     super("click", prev, next);
     this.id = id;
     this.classList = classList;
@@ -154,10 +172,14 @@ class Click extends Action {
   executeAction() {
     if (document.getElementById(this.id)) {
       // use id if found.
-      document.getElementById(this.id).click();
+      document.getElementById(this.id)?.click();
     } else if (this.classList != "") {
       // use class name if no id given.
-      document.getElementsByClassName(this.classList)[0].click();
+      let tmp = document.getElementsByClassName(this.classList)[0];
+      if (tmp instanceof HTMLElement)
+        tmp.click();
+      else
+        console.error("Cannot click on selected element.");
     } else {
       // no way to find element.
       throw "click action id and classlist are null";
@@ -168,10 +190,12 @@ class Click extends Action {
    * Convert this action to the object(map) representation.
    * @return {Object} {type: "click", classList: "xxx", id: "xxx"}
    */
-  getObjRepresentation() {
-    let tmp = super.getObjRepresentation();
-    tmp.classList = this.classList;
-    tmp.id = this.id;
+  getObjRepresentation(): ClickObj {
+    let tmp: ClickObj = { 
+      type: super.getObjRepresentation().type,
+      classList: this.classList,
+      id: this.id
+    }
     return tmp;
   }
 }
@@ -180,12 +204,13 @@ class Click extends Action {
  * Wait, Wait a while before continues.
  */
 class Wait extends Action {
+  time: number
   /**
    * @param {time} Wait time in millisecond.
    * @param {prev} Reference to previous action in the chain.
    * @param {next} Reference to next action in the chain.
    */
-  constructor(time, prev, next) {
+  constructor(time: number, prev: Action | null, next: Action | null) {
     super("wait", prev, next);
     this.time = time;
   }
@@ -201,9 +226,11 @@ class Wait extends Action {
    * Convert this action to the object(map) representation.
    * @return {Object} {type: "wait", time: n}
    */
-  getObjRepresentation() {
-    let tmp = super.getObjRepresentation();
-    tmp.time = this.time;
+  getObjRepresentation(): WaitObj {
+    let tmp = {
+      type: super.getObjRepresentation().type,
+      time: this.time
+    }
     return tmp;
   }
 }
@@ -212,12 +239,13 @@ class Wait extends Action {
  * Goto, go to another action.
  */
 class Goto extends Action {
+  gotoStep: number;
   /**
    * @param {gotoStep} step number to jump to
    * @param {prev} Reference to previous action in the chain.
    * @param {next} Reference to next action in the chain.
    */
-  constructor(gotoStep, prev, next) {
+  constructor(gotoStep: number, prev: Action | null, next: Action | null) {
     super("goto", prev, next);
     this.gotoStep = gotoStep;
   }
@@ -230,9 +258,11 @@ class Goto extends Action {
    * Convert this action to the object(map) representation.
    * @return {Object} {type: "goto", gotoStep: n}
    */
-  getObjRepresentation() {
-    let tmp = super.getObjRepresentation();
-    tmp.gotoStep = this.gotoStep;
+  getObjRepresentation(): GotoObj {
+    let tmp = {
+      type: super.getObjRepresentation().type,
+      gotoStep: this.gotoStep
+    }
     return tmp;
   }
 }
@@ -241,13 +271,15 @@ class Goto extends Action {
  * Break, break the execution chain if limit of pass exceeded.
  */
 class Break extends Action {
+  pass: number
+  remaining: number
   /**
    * @param {pass} number of passes allowed.
    * @param {remaining} number of passes so far.
    * @param {prev} Reference to previous action in the chain.
    * @param {next} Reference to next action in the chain.
    */
-  constructor(pass, prev, next) {
+  constructor(pass: number, prev: Action | null, next: Action | null) {
     super("break", prev, next);
     this.pass = pass;
     this.remaining = pass;
@@ -266,9 +298,11 @@ class Break extends Action {
    * Convert this action to the object(map) representation.
    * @return {Object} {type: "break", pass: n}
    */
-  getObjRepresentation() {
-    let tmp = super.getObjRepresentation();
-    tmp.pass = this.pass;
+  getObjRepresentation(): BreakObj {
+    let tmp = {
+      type: super.getObjRepresentation().type,
+      pass: this.pass
+    }
     return tmp;
   }
 }
@@ -277,13 +311,16 @@ class Break extends Action {
  * TextInput, input text to the target element
  */
 class TextInput extends Action {
+  id: string;
+  classList: string
+  text: string
   /**
    * @param {id} id of element to input
    * @param {classList} classList of element to input
    * @param {prev} Reference to previous action in the chain.
    * @param {next} Reference to next action in the chain.
    */
-  constructor(id,classList, text, prev, next) {
+  constructor(id: string, classList: string, text: string, prev: Action | null, next: Action | null) {
     super("input", prev, next);
     this.id = id;
     this.classList = classList;
@@ -294,7 +331,7 @@ class TextInput extends Action {
    * Input into the element.
    */
   executeAction() {
-    let area;
+    let area: any;
     if (document.getElementById(this.id)) {
       // use id if possible
       area = document.getElementById(this.id);
@@ -305,24 +342,29 @@ class TextInput extends Action {
       // no way to find element
       throw "click action id and classlist are null";
     }
-    if (area.value != undefined) {
+    if (area.value !== undefined) {
       // change value if field exists.
       area.value = this.text;
     } else {
       // change innertext if no value field.
       area.innerText = this.text;
     }
+    
   }
 
   /**
    * Convert this action to the object(map) representation.
    * @return {Object} {type: "input", text: "xxx", id: "xxx", classList: "xxx"}
    */
-  getObjRepresentation() {
-    let tmp = super.getObjRepresentation();
-    tmp.text = this.text;
-    tmp.classList = this.classList;
-    tmp.id = this.id;
+  getObjRepresentation(): TextInputObj {
+    let tmp = {
+      type: super.getObjRepresentation().type,
+      text: this.text,
+      classList: this.classList,
+      id: this.id,
+    }
     return tmp;
   }
 }
+
+export {Chain, ActionSet, ClickObj, TextInputObj, WaitObj, GotoObj, BreakObj}
