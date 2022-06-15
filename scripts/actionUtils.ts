@@ -58,10 +58,10 @@ class Chain {
    * @return {arr} Array of Action objects equivalent to this chain.
    */
   getObjRepresentation() {
-    let arr = [];
+    let arr: Array<ActionSet> = [];
     let curr = this.actionChain.next;
     while(curr != null) {
-      arr.push(curr.getObjRepresentation);
+      arr.push(curr.getObjRepresentation() as ActionSet);
     }
     return arr;
   }

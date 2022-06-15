@@ -1,4 +1,3 @@
-import { stringify } from "uuid";
 import { ActionSet, ClickObj, TextInputObj, WaitObj, GotoObj, BreakObj } from "./actionUtils"
 
 "use strict";
@@ -208,6 +207,8 @@ function clear() {
 function loadStorage() {
   chrome.storage.sync.get("click-input-automaton-actions", function(result) {
     let actArr: Array<ActionSet> = result["click-input-automaton-actions"];
+    if (actArr == null)
+      actArr = [];
     actArr.forEach(act => {
       if (act.type == "click") {
         addClick(act as ClickObj);

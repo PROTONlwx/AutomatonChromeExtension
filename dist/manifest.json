@@ -9,7 +9,7 @@
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "js": ["mousedown.js", "actionUtils.js", "action.js"]
+      "js": ["mousedown.js", "action.js"]
     }
   ],
   "permissions": ["activeTab", "contextMenus", "storage"],
