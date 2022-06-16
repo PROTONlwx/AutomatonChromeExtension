@@ -1,19 +1,21 @@
+import { ActionSet, ClickObj, TextInputObj, WaitObj, GotoObj, BreakObj } from "./actionUtils"
+
 "use strict";
-let actions = [];
-let buttons = [];
+let actions: Array<ActionSet> = [];
+let buttons: Array<HTMLButtonElement> = [];
 /******* UI ********/
 
 // Listeners
 chrome.contextMenus.onClicked.addListener(addbutton);
-id("add-click").addEventListener("click", () => addClick());
-id("add-input").addEventListener("click", () => addInput());
-id("add-wait").addEventListener("click", () => addWait());
-id("add-goto").addEventListener("click", () => addGoto());
-id("add-break").addEventListener("click", () => addBreak());
-id("execute").addEventListener("click", execute);
-id("save").addEventListener("click", save);
-id("clear").addEventListener("click", clear);
-id("chinese").addEventListener("click", () => window.open("https://reetaa.com/#/singlePost/68"));
+id("add-click")?.addEventListener("click", () => addClick(null));
+id("add-input")?.addEventListener("click", () => addInput(null));
+id("add-wait")?.addEventListener("click", () => addWait(null));
+id("add-goto")?.addEventListener("click", () => addGoto(null));
+id("add-break")?.addEventListener("click", () => addBreak(null));
+id("execute")?.addEventListener("click", execute);
+id("save")?.addEventListener("click", save);
+id("clear")?.addEventListener("click", clear);
+id("chinese")?.addEventListener("click", () => window.open("https://reetaa.com/#/singlePost/68"));
 
 // Load storage
 loadStorage();
@@ -23,7 +25,7 @@ loadStorage();
 /**
  * Add a click action to page.
  */
-function addClick(obj=null) {
+function addClick(obj: ClickObj | null) {
   let [row, col3] = templateAction("Click");
   let choose = document.createElement("button");
   choose.type = "button";
@@ -32,14 +34,14 @@ function addClick(obj=null) {
 
   col3.appendChild(choose);
 
-  id("actions").appendChild(row);
+  id("actions")?.appendChild(row);
   choose.addEventListener("click", addMenuItem);
 }
 
 /**
  * Add a input action to page.
  */
-function addInput(obj=null) {
+function addInput(obj: TextInputObj | null) {
   let [row, col3] = templateAction("Input");
   let choose = document.createElement("button");
   choose.type = "button";
@@ -61,14 +63,14 @@ function addInput(obj=null) {
   col3.appendChild(choose);
   col3.appendChild(inputSection);
 
-  id("actions").appendChild(row);
+  id("actions")?.appendChild(row);
   choose.addEventListener("click", addMenuItem);
 }
 
 /**
  * Add a wait action to page.
  */
-function addWait(obj=null) {
+function addWait(obj: WaitObj | null) {
   let [row, col3] = templateAction("Wait");
   let inputSection = document.createElement("div");
   inputSection.classList.add("input-group", "input-group-sm", "mb-3");
@@ -79,7 +81,7 @@ function addWait(obj=null) {
   let inputArea = document.createElement("input");
   inputArea.type = "text";
   inputArea.classList.add("form-control");
-  inputArea.value = obj ? obj.time / 1000 : "";
+  inputArea.value = obj ? `${obj.time / 1000}` : "";
   let inputTail = document.createElement("span");
   inputTail.classList.add("input-group-text");
   inputTail.textContent = "Second";
@@ -89,13 +91,13 @@ function addWait(obj=null) {
   inputSection.appendChild(inputTail);
 
   col3.appendChild(inputSection);
-  id("actions").appendChild(row);
+  id("actions")?.appendChild(row);
 }
 
 /**
  * Add a goto action to page.
  */
-function addGoto(obj=null) {
+function addGoto(obj: GotoObj | null) {
   let [row, col3] = templateAction("Goto");
   let inputSection = document.createElement("div");
   inputSection.classList.add("input-group", "input-group-sm", "mb-3");
@@ -106,18 +108,18 @@ function addGoto(obj=null) {
   let inputArea = document.createElement("input");
   inputArea.type = "text";
   inputArea.classList.add("form-control");  
-  inputArea.value = obj ? obj.gotoStep : "";
+  inputArea.value = obj ? `${obj.gotoStep}` : "";
 
   inputSection.appendChild(inputTitle);
   inputSection.appendChild(inputArea);
   col3.appendChild(inputSection);
-  id("actions").appendChild(row);
+  id("actions")?.appendChild(row);
 }
 
 /**
  * Add a break action to page.
  */
-function addBreak(obj=null) {
+function addBreak(obj: BreakObj | null) {
   let [row, col3] = templateAction("Break");
   let inputSection = document.createElement("div");
   inputSection.classList.add("input-group", "input-group-sm", "mb-3");
@@ -128,7 +130,7 @@ function addBreak(obj=null) {
   let inputArea = document.createElement("input");
   inputArea.type = "text";
   inputArea.classList.add("form-control");
-  inputArea.value = obj ? obj.pass : "";
+  inputArea.value = obj ? `${obj.pass}` : "";
   let inputTail = document.createElement("span");
   inputTail.classList.add("input-group-text");
   inputTail.textContent = "Pass";
@@ -138,7 +140,7 @@ function addBreak(obj=null) {
   inputSection.appendChild(inputTail);
 
   col3.appendChild(inputSection);
-  id("actions").appendChild(row);
+  id("actions")?.appendChild(row);
 }
 
 /**
@@ -148,7 +150,7 @@ async function execute() {
   actions = [];
   document.querySelectorAll(".action").forEach(populate);
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  chrome.tabs.sendMessage(tab.id, {request: "actions", actions: actions}, function(response) {
+  chrome.tabs.sendMessage(tab.id!, {request: "actions", actions: actions}, function(response) {
     console.log(response);
   });
 }
@@ -165,24 +167,28 @@ async function save() {
 /**
  * Choose element from page.
  */
-function addMenuItem(evt) {
+function addMenuItem(evt: Event) {
   chrome.contextMenus.update("clicker-select", {
     visible: true
   });
-  evt.target.textContent = 'Selecting';
-  buttons.push(evt.target);
+  if (evt.target instanceof HTMLButtonElement) {
+    evt.target.textContent = 'Selecting';
+    buttons.push(evt.target);
+  }
 }
 
 /**
  * Delete action from page.
  */
-function deleteAction(evt) {
-  let action = evt.target;
-  while (!action.classList.contains("action")) {
-    action = action.parentElement;
+function deleteAction(evt: Event) {
+  if (evt.target instanceof HTMLElement) {
+    let action: HTMLElement = evt.target;
+    while (!action.classList.contains("action") && action.parentElement != null) {
+      action = action.parentElement;
+    }
+    action.remove();
+    reorder();
   }
-  action.remove();
-  reorder();
 }
 
 /**
@@ -190,7 +196,7 @@ function deleteAction(evt) {
  */
 function clear() {
   let parent = id("actions");
-  while (parent.firstChild) {
+  while (parent?.firstChild) {
     parent.removeChild(parent.firstChild);
   }
 }
@@ -200,20 +206,22 @@ function clear() {
  */
 function loadStorage() {
   chrome.storage.sync.get("click-input-automaton-actions", function(result) {
-    let actArr = result["click-input-automaton-actions"];
+    let actArr: Array<ActionSet> = result["click-input-automaton-actions"];
+    if (actArr == null)
+      actArr = [];
     actArr.forEach(act => {
       if (act.type == "click") {
-        addClick(act);
+        addClick(act as ClickObj);
       } else if (act.type == "wait") {
-        addWait(act);
+        addWait(act as WaitObj);
       } else if (act.type == "goto") {
-        addGoto(act);
+        addGoto(act as GotoObj);
       } else if (act.type == "break") {
-        addBreak(act);
+        addBreak(act as BreakObj);
       } else if (act.type == "input") {
-        addInput(act);
+        addInput(act as TextInputObj);
       } else {
-        throw "action type not recognized: " + type;
+        throw "action type not recognized: " + act.type;
       }
     });
   });
@@ -223,8 +231,8 @@ function loadStorage() {
 
 
 /******** HELPER *******/
-function addbutton(info, tab) {
-  chrome.tabs.sendMessage(tab.id, {request: "lastClicked"}, function(response) {
+function addbutton(info: chrome.contextMenus.OnClickData, tab?: chrome.tabs.Tab | undefined) {
+  chrome.tabs.sendMessage(tab!.id!, {request: "lastClicked"}, function(response) {
     buttons.forEach(btn => btn.textContent = response);
     buttons = [];
     chrome.contextMenus.update("clicker-select", {
@@ -233,34 +241,34 @@ function addbutton(info, tab) {
   });
 }
 
-function populate(action) {
-  let type = action.querySelector("p.action-type").textContent.toLowerCase();
+function populate(action: Element) {
+  let type = action.querySelector("p.action-type")?.textContent?.toLowerCase();
   if (type == "click") {
-    let tmp = action.querySelector(".choose-target").textContent;
-    let id = {};
+    let tmp = action.querySelector(".choose-target")?.textContent;
+    let id: {id: string, classList: string} = {id: '', classList: ''};
     if (tmp !== "Choose target") {
-      id = JSON.parse(action.querySelector(".choose-target").textContent);
+      id = JSON.parse(action.querySelector(".choose-target")?.textContent ?? "{id: '', classList: ''}");
     }
     actions.push({type: type, id: id.id, classList: id.classList});
   } else if (type == "wait") {
-    let time = parseInt(action.querySelector("input").value);
+    let time = parseInt(action.querySelector("input")!.value);
     time = isNaN(time) ? 0 : time * 1000;
     actions.push({type: type, time: time});
   } else if (type == "goto") {
-    let gotoStep = parseInt(action.querySelector("input").value);
+    let gotoStep = parseInt(action.querySelector("input")!.value);
     gotoStep = isNaN(gotoStep) ? 0 : gotoStep;
     actions.push({type: type, gotoStep: gotoStep});
   } else if (type == "break") {
-    let pass = parseInt(action.querySelector("input").value);
+    let pass = parseInt(action.querySelector("input")!.value);
     pass = isNaN(pass) ? 1 : pass;
     actions.push({type: type, pass: pass});
   } else if (type == "input") {
-    let tmp = action.querySelector(".choose-target").textContent;
-    let id = {};
+    let tmp = action.querySelector(".choose-target")!.textContent;
+    let id: {id: string, classList: string} = {id: '', classList: ''};
     if (tmp !== "Choose target") {
-      id = JSON.parse(action.querySelector(".choose-target").textContent);
+      id = JSON.parse(action.querySelector(".choose-target")?.textContent ?? "{id: '', classList: ''}");
     }
-    let text = action.querySelector("input").value;
+    let text = action.querySelector("input")!.value;
     actions.push({type: type, text: text, id: id.id, classList: id.classList});
   } else {
     throw "action type not recognized: " + type;
@@ -270,11 +278,11 @@ function populate(action) {
 function reorder() {
   let allAction = qsa(".action");
   for (let i = 0; i < allAction.length; i++) {
-    allAction[i].querySelector(".step-no").textContent = i;
+    allAction[i].querySelector(".step-no")!.textContent = `${i}`;
   }
 }
 
-function templateAction(typeName) {
+function templateAction(typeName: string) {
   let row = document.createElement("div");
   row.classList.add("row", "action");
 
@@ -289,7 +297,7 @@ function templateAction(typeName) {
 
   let stepNo = document.createElement("span");
   stepNo.classList.add("badge", "bg-secondary", "step-no");
-  stepNo.textContent = id("actions").childElementCount;
+  stepNo.textContent = `${id("actions")?.childElementCount}`;
   let type = document.createElement("p");
   type.classList.add("action-type");
   type.textContent = typeName;
@@ -311,15 +319,15 @@ function templateAction(typeName) {
 }
 
 
-function id(i){
+function id(i: string){
   return document.getElementById(i);
 }
 
-function qsa(i){
+function qsa(i: string){
   return document.querySelectorAll(i);
 }
 
-function qs(i){
+function qs(i: string){
   return document.querySelector(i);
 }
 
